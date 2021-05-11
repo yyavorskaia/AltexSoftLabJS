@@ -1,18 +1,28 @@
-let result = '';
+function shuffle(array) {
+    var i = 0,
+        j = 0,
+        temp = null
 
-function makeid(length) {
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    for (i = array.length - 1; i > 0; i -= 1) {
+        j = Math.floor(Math.random() * (i + 1))
+        temp = array[i]
+        array[i] = array[j]
+        array[j] = temp
     }
 
-    return result;
+    return array;
 }
 
-makeid(5);
+let one = shuffle(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
 
-let arr = result.split('');
+
+let arr = [];
+
+for (var i = 0; i < 5; i++) {
+    arr.push(one[i]);
+}
+
+
 let select = document.getElementById("selectNumber");
 
 for (var i = 0; i < arr.length; i++) {
@@ -25,17 +35,22 @@ for (var i = 0; i < arr.length; i++) {
 
 
 function foo() {
+    let out = document.querySelector('.out');
 
     fetch('list.json')
         .then(response => response.json())
-        .then(json => console.log(json))
 
     const filterData = (data, letter) => {
         result = data.filter(item => item.name.charAt(0) === letter)
         if (result.length === 0) {
-            console.log('Cовпадений не обнаружено!');
+            out.innerHTML = 'Cовпадений не обнаружено!';
+
         } else {
-            console.log('result: ', result);
+            out.innerHTML = '';
+
+            for (let i = 0; i < result.length; i++) {
+                out.innerHTML += result[i].name + '<br>';
+            }
         }
         return result;
     }
@@ -43,9 +58,6 @@ function foo() {
     fetch("list.json")
         .then((response) => response.json())
         .then((json) => filterData(json, select.value));
-
-
-    console.log(select.value);
 }
 
 select.onchange = foo;
